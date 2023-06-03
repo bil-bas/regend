@@ -17,3 +17,13 @@ def stickers(x, y, limit=None):
                 return
 
             yield i, j, n
+
+
+def draw_circle(draw, i, j, diameter, pitch, margin_left, margin_top):
+    draw.ellipse((
+            i * pitch + margin_left, j * pitch + margin_top,
+            i * pitch + diameter + margin_left, j * pitch + diameter + margin_top
+        ),
+        fill=None,
+        outline=(0, 0, 0)
+    )

@@ -5,7 +5,7 @@ import math
 import segno
 from PIL import Image, ImageDraw, ImageFont
 
-from regend.utils import mm_to_px, stickers, A4_HEIGHT, A4_WIDTH
+from regend.utils import mm_to_px, stickers, draw_circle, A4_HEIGHT, A4_WIDTH
 
 
 DIAMETER = mm_to_px(51)
@@ -18,7 +18,7 @@ PREFIX = "LL"
 FONT_HEIGHT = 30
 
 
-def draw_qr_code(page):
+def draw_qr_code(page, i, j, n):
     # Draw QR tag.
     qr_code = segno.make(f"https://ishara.uk/{PREFIX}{n:02}")
     qr_code = qr_code.to_pil(scale=5)
@@ -29,7 +29,7 @@ def draw_qr_code(page):
     page.paste(qr_code, pos)
 
 
-def draw_image(page):
+def draw_image(page, i, j, n):
     box = (
         i * PITCH + MARGIN_LEFT, j * PITCH + MARGIN_TOP,
         i * PITCH + DIAMETER + MARGIN_LEFT, j * PITCH + DIAMETER + MARGIN_TOP
@@ -47,15 +47,7 @@ def draw_image(page):
     page.paste(image, box)
 
 
-def draw_circle(draw):
-    box = (
-        i * PITCH + MARGIN_LEFT, j * PITCH + MARGIN_TOP,
-        i * PITCH + DIAMETER + MARGIN_LEFT, j * PITCH + DIAMETER + MARGIN_TOP
-    )
-    draw.ellipse(box, fill=None, outline=(0, 0, 0))
-
-
-def draw_label(draw, color, background_color=None):
+def draw_label(draw, i, j, n, font, color, background_color=None):
     label = f"{PREFIX}{n:02}"
     width = font.getlength(label)
     pos = (
@@ -68,24 +60,34 @@ def draw_label(draw, color, background_color=None):
     draw.text(pos, label, font=font, fill=color)
 
 
-if __name__ == "__main__":
-    qr_page = Image.new("RGBA", (A4_WIDTH, A4_HEIGHT), (255, 255, 255, 255))
-    qr_draw = ImageDraw.Draw(qr_page)
+def draw_images(font):
     im_page = Image.new("RGBA", (A4_WIDTH, A4_HEIGHT), (255, 255, 255, 255))
     im_draw = ImageDraw.Draw(im_page)
-    font = ImageFont.truetype("./fonts/Helvetica-Bold.ttf", FONT_HEIGHT)
 
     for i, j, n in stickers(3, 5, TOTAL):
-        draw_qr_code(qr_page)
+        draw_image(im_page, i, j, n)
+        draw_circle(im_draw, i, j, diameter=DIAMETER, pitch=PITCH, margin_top=MARGIN_TOP, margin_left=MARGIN_LEFT)
+        draw_label(im_draw, i, j, n, font, color=(200, 200, 200), background_color=(0, 0, 0))
+
+    im_page.save(f"output/{PREFIX}_images.png")
+
+
+def draw_qr_codes(font):
+    qr_page = Image.new("RGBA", (A4_WIDTH, A4_HEIGHT), (255, 255, 255, 255))
+    qr_draw = ImageDraw.Draw(qr_page)
 
     for i, j, n in stickers(3, 5, TOTAL):
-        draw_image(im_page)
+        draw_qr_code(qr_page, i, j, n)
 
-        draw_circle(qr_draw)
-        draw_circle(im_draw)
-
-        draw_label(qr_draw, color=(0, 0, 0))
-        draw_label(im_draw, color=(200, 200, 200), background_color=(0, 0, 0))
+    for i, j, n in stickers(3, 5, TOTAL):
+        draw_circle(qr_draw, i, j, diameter=DIAMETER, pitch=PITCH, margin_top=MARGIN_TOP, margin_left=MARGIN_LEFT)
+        draw_label(qr_draw, i, j, n, font, color=(0, 0, 0))
 
     qr_page.save(f"output/{PREFIX}_qr_codes.png")
-    im_page.save(f"output/{PREFIX}_images.png")
+
+
+if __name__ == "__main__":
+    bold_font = ImageFont.truetype("./fonts/Helvetica-Bold.ttf", FONT_HEIGHT)
+
+    draw_qr_codes(bold_font)
+    draw_images(bold_font)
