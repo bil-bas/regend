@@ -35,7 +35,7 @@ def draw_image(page, i, j, n):
         i * PITCH + DIAMETER + MARGIN_LEFT, j * PITCH + DIAMETER + MARGIN_TOP
     )
 
-    image = Image.open(f"images/{PREFIX}/{PREFIX}13.png")
+    image = Image.open(f"images/{PREFIX}/{PREFIX}{n:02}.jpeg")
     min_size = min(image.width, image.height)
     crop_box = (
         (image.width - min_size) // 2,
@@ -65,7 +65,10 @@ def draw_images(font):
     im_draw = ImageDraw.Draw(im_page)
 
     for i, j, n in stickers(3, 5, TOTAL):
-        draw_image(im_page, i, j, n)
+        try:
+            draw_image(im_page, i, j, n)
+        except:
+            pass
         draw_circle(im_draw, i, j, diameter=DIAMETER, pitch=PITCH, margin_top=MARGIN_TOP, margin_left=MARGIN_LEFT)
         draw_label(im_draw, i, j, n, font, color=(200, 200, 200), background_color=(0, 0, 0))
 
