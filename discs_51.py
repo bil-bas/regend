@@ -65,12 +65,9 @@ def draw_images(font):
     im_draw = ImageDraw.Draw(im_page)
 
     for i, j, n in stickers(3, 5, TOTAL):
-        try:
-            draw_image(im_page, i, j, n)
-        except:
-            pass
+        draw_image(im_page, i, j, n)
         draw_circle(im_draw, i, j, diameter=DIAMETER, pitch=PITCH, margin_top=MARGIN_TOP, margin_left=MARGIN_LEFT)
-        draw_label(im_draw, i, j, n, font, color=(200, 200, 200), background_color=(0, 0, 0))
+        draw_label(im_draw, i, j, n, font, color=(0, 0, 0), background_color=(255, 255, 255))
 
     im_page.save(f"output/{PREFIX}_images.png")
 
