@@ -17,8 +17,8 @@ def draw_icon(page, icons, i, j):
     else:
         icon = icons["evaluate"]
 
-    x = i * PITCH + MARGIN_LEFT + (DIAMETER - icon.width) // 2
-    y = j * PITCH + MARGIN_TOP + (DIAMETER - icon.height) // 2
+    x = i * PITCH + MARGIN_LEFT + round((DIAMETER - icon.width) / 2)
+    y = j * PITCH + MARGIN_TOP + round((DIAMETER - icon.height) / 2)
     page.paste(icon, (x, y))
 
 
@@ -28,13 +28,11 @@ def draw_discs():
         "evaluate": Image.open("./images/evaluate.png"),
     }
 
-    icons = {name: i.resize((i.width * 2, i.height * 2)) for name, i in icons.items()}
-
     page = Image.new("RGBA", (A4_WIDTH, A4_HEIGHT), (255, 255, 255, 255))
     draw = ImageDraw.Draw(page)
 
     for i, j, _ in stickers(5, 7):
-        draw_circle(draw, i, j, diameter=DIAMETER, pitch=PITCH, margin_top=MARGIN_TOP, margin_left=MARGIN_LEFT)
+        #draw_circle(draw, i, j, diameter=DIAMETER, pitch=PITCH, margin_top=MARGIN_TOP, margin_left=MARGIN_LEFT)
         draw_icon(page, icons, i, j)
 
     page.save("./output/37.png")
