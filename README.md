@@ -6,3 +6,8 @@
     Link: https://www.flaticon.com/free-icon/link_455691
     Joker: https://www.flaticon.com/free-icon/question-mark_3524344
     QR code: https://www.flaticon.com/free-icon/qr-code_714390
+
+
+## Translation editor
+
+https://poedit.net/

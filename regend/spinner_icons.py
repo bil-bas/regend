@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
+
 
 import math
 from PIL import Image, ImageDraw
 
-from regend.utils import mm_to_px, stickers, draw_circle, A4_WIDTH, A4_HEIGHT
+from .utils import mm_to_px, A4_WIDTH, A4_HEIGHT, LINE_WIDTH
 
 
 RADIUS = mm_to_px(70)
@@ -25,7 +25,7 @@ def draw_line(draw, i):
     y1 = round(CENTER_Y + math.cos(angle) * RADIUS * 0.7)
     x2 = round(CENTER_X + math.sin(angle) * RADIUS * 1.3)
     y2 = round(CENTER_Y + math.cos(angle) * RADIUS * 1.3)
-    draw.line((x1, y1, x2, y2), fill=(200, 50, 50), width=1)
+    draw.line((x1, y1, x2, y2), fill=(200, 50, 50), width=LINE_WIDTH)
 
 
 def draw_spinner():
