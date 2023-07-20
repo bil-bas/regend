@@ -1,7 +1,7 @@
 import segno
 from PIL import Image, ImageDraw
 
-from .utils import mm_to_px, stickers, draw_circle, A4_HEIGHT, A4_WIDTH, FONT_HEIGHT
+from .utils import mm_to_px, stickers, draw_circle, A4_HEIGHT, A4_WIDTH, FONT_HEIGHT_QR
 
 
 DIAMETER = mm_to_px(51)
@@ -12,7 +12,7 @@ MARGIN_TOP = mm_to_px(17)
 
 def draw_qr_code(prefix: str, language_code: str, page, i: int, j: int, n: int) -> None:
     # Draw QR tag.
-    qr_code = segno.make(f"https://ishara.uk/{prefix}{n:02}{language_code}")
+    qr_code = segno.make(f"https://ishara.uk/{prefix}{n:02}{language_code if language_code != 'en' else ''}")
     qr_code = qr_code.to_pil(scale=5)
     pos = (
         i * PITCH + MARGIN_LEFT + (DIAMETER - qr_code.width) // 2,
@@ -47,7 +47,7 @@ def draw_label(label, language_code, draw, i: int, j: int, n: int, font, color, 
         j * PITCH + MARGIN_TOP + (DIAMETER - (44 if language_code == "or" else 36)),
     )
     if background_color is not None:
-        draw.rectangle((pos[0] - 2, pos[1] - 1, pos[0] + width + 4, pos[1] + FONT_HEIGHT + 2),
+        draw.rectangle((pos[0] - 2, pos[1] - 1, pos[0] + width + 4, pos[1] + FONT_HEIGHT_QR + 2),
                        fill=background_color, outline=None)
     draw.text(pos, label, font=font, fill=color)
 

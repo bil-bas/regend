@@ -12,10 +12,10 @@ msgstr ""
 "X-Generator: Poedit 3.3.2\n"
 
 msgid "link"
-msgstr "Link: Join projects"
+msgstr "Link: Make a link between two discs"
 
 msgid "evaluate"
-msgstr "Evaluate: Evaluate stuff"
+msgstr "Evaluate: Discuss positives and negatives"
 
 msgid "joker"
 msgstr "Joker"

@@ -6,7 +6,7 @@ import polib
 from PIL import ImageFont
 
 from regend import discs_qr, discs_action, spinner_icons
-from regend.utils import FONT_HEIGHT
+from regend.utils import FONT_HEIGHT_ACTION, FONT_HEIGHT_QR
 
 
 def create_parser():
@@ -36,15 +36,16 @@ def parse(parser):
 
     language_code = language[0:2]
 
-    font = ImageFont.truetype(f"./fonts/{font_file}.ttf", FONT_HEIGHT)
+    font_qr = ImageFont.truetype(f"./fonts/{font_file}.ttf", FONT_HEIGHT_QR)
+    font_action = ImageFont.truetype(f"./fonts/{font_file}.ttf", FONT_HEIGHT_ACTION)
 
     prefix = args.prefix.upper()
 
     spinner_icons.draw_spinner()
 
-    discs_qr.draw_discs(t=t, prefix=prefix, font=font, language_code=language_code)
+    discs_qr.draw_discs(t=t, prefix=prefix, font=font_qr, language_code=language_code)
 
-    discs_action.draw_discs(font=font, t=t, language_code=language_code)
+    discs_action.draw_discs(title_font=font_qr, body_font=font_action, t=t, language_code=language_code)
 
 
 if __name__ == "__main__":
