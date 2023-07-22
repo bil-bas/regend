@@ -21,13 +21,28 @@ def draw_qr_code(prefix: str, language_code: str, page, i: int, j: int, n: int) 
     page.paste(qr_code, pos)
 
 
-def draw_image(prefix: str, page, i: int, j: int, n: int):
+def image_file(language_code: str, prefix: str, n: int):
+    try:
+        image = Image.open(f"./images/{prefix}/{language_code}/{prefix}{n:02}.png")
+    except FileNotFoundError:
+        try:
+            image = Image.open(f"./images/{prefix}/{language_code}/{prefix}{n:02}.jpeg")
+        except FileNotFoundError:
+            # Default to english version of the file.
+            if language_code != "en":
+                image = image_file("en", prefix=prefix, n=n)
+            else:
+                raise FileNotFoundError("No image found for {language_code}/{prefix}{n:02}")
+    return image
+
+
+def draw_image(language_code: str, prefix: str, page, i: int, j: int, n: int):
     box = (
         i * PITCH + MARGIN_LEFT, j * PITCH + MARGIN_TOP,
         i * PITCH + PITCH + MARGIN_LEFT, j * PITCH + PITCH + MARGIN_TOP
     )
+    image = image_file(language_code=language_code, prefix=prefix, n=n)
 
-    image = Image.open(f"./images/{prefix}/{prefix}{n:02}.jpeg")
     min_size = min(image.width, image.height)
     crop_box = (
         (image.width - min_size) // 2,
@@ -57,8 +72,8 @@ def draw_images(t, prefix: str, language_code: str, font, with_border: bool):
 
     for i, j, n in stickers(3, 5):
         try:
-            draw_image(prefix, im_page, i, j, n)
-            label = qr_label(prefix, n, language_code)
+            draw_image(language_code=language_code, prefix=prefix, page=im_page, i=i, j=j, n=n)
+            label = qr_label(prefix=prefix, n=n, language_code=language_code)
         except FileNotFoundError:
             label = "?"
 

@@ -3,7 +3,7 @@ from PIL import ImageFont, ImageDraw
 
 MM_TO_PX = 3.7795275591
 FONT_HEIGHT_QR = 26
-FONT_HEIGHT_ACTION = 14
+FONT_HEIGHT_ACTION = 16
 
 
 def mm_to_px(mm: float) -> int:

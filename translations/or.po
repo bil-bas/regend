@@ -12,10 +12,10 @@ msgstr ""
 "X-Generator: Poedit 3.3.2\n"
 
 msgid "link"
-msgstr "ଦୁଇଟି ଡିସ୍କ: ମଧ୍ୟରେ ସମ୍ପର୍କ ବନାନ୍ତୁ"
+msgstr "ଦୁଇଟି ଡିସ୍କ ମଧ୍ୟରେ ସମ୍ପର୍କ ବନାନ୍ତୁ"
 
 msgid "evaluate"
-msgstr "ଭଲ ମନ୍ଦ: ଆଲୋଚନା କରନ୍ତୁ"
+msgstr "ଭଲ ମନ୍ଦ ଆଲୋଚନା କରନ୍ତୁ"
 
 msgid "joker"
 msgstr "କଷ୍ଟମ୍"
