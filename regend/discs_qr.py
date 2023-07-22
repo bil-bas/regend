@@ -40,7 +40,6 @@ def draw_image(prefix: str, page, i: int, j: int, n: int):
 
 
 def draw_label(label, language_code, draw, i: int, j: int, n: int, font, color, background_color=None) -> None:
-
     width = font.getlength(label)
     pos = (
         i * PITCH + MARGIN_LEFT + (DIAMETER - width) // 2,
@@ -61,15 +60,14 @@ def draw_images(t, prefix: str, language_code: str, font, with_border: bool):
             draw_image(prefix, im_page, i, j, n)
             label = qr_label(prefix, n, language_code)
         except FileNotFoundError:
-            label = t["joker"]
+            label = "?"
 
         draw_label(label, language_code, im_draw, i, j, n, font, color=(0, 0, 0), background_color=(255, 255, 255))
         if with_border:
             draw_circle(im_draw, i, j, diameter=DIAMETER, pitch=PITCH,
                         margin_top=MARGIN_TOP, margin_left=MARGIN_LEFT)
 
-    language_prefix = f"{language_code}_" if language_code != "en" else ""
-    im_page.save(f"./output/{language_prefix}{prefix}_images{'_b' if with_border else ''}.png")
+    im_page.save(f"./output/{language_code}_{prefix}_images{'_b' if with_border else ''}.png")
 
 
 def qr_label(prefix, n, language_code):

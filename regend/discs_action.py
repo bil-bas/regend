@@ -46,26 +46,25 @@ def draw_icon_discs(with_border: bool) -> None:
     page.save(f"./output/actions_icon{'_b' if with_border else ''}.png")
 
 
-def draw_text(draw, i: int, j: int, text: str, title_font, body_font) -> None:
-    j_offset = -110
-    title, body = re.split(r" *: *", text)
-
-    width = title_font.getlength(title)
+def draw_text_line(draw, i, j, y_offset, text, font):
+    width = font.getlength(text)
     pos = (
         i * PITCH + MARGIN_LEFT + (DIAMETER - width) // 2,
-        j * PITCH + MARGIN_TOP + DIAMETER + j_offset,
+        j * PITCH + MARGIN_TOP + DIAMETER + y_offset,
     )
-    draw.text(pos, title, font=title_font, fill=(0, 0, 0))
-    j_offset += FONT_HEIGHT_QR
+    draw.text(pos, text, font=font, fill=(0, 0, 0))
+
+
+def draw_text(draw, i: int, j: int, text: str, title_font, body_font) -> None:
+    y_offset = -110
+    title, body = re.split(r" *: *", text)
+
+    draw_text_line(draw, i, j, y_offset, title, title_font)
+    y_offset += FONT_HEIGHT_QR + 8
 
     for line in get_wrapped_text(text=body, font=body_font, line_length=MAX_LINE_LENGTH):
-        width = body_font.getlength(line)
-        pos = (
-            i * PITCH + MARGIN_LEFT + (DIAMETER - width) // 2,
-            j * PITCH + MARGIN_TOP + DIAMETER + j_offset,
-        )
-        draw.text(pos, line, font=body_font, fill=(0, 0, 0))
-        j_offset += FONT_HEIGHT_ACTION
+        draw_text_line(draw, i, j, y_offset, line, body_font)
+        y_offset += FONT_HEIGHT_ACTION + 4
 
 
 def draw_text_discs(t: hash, language_code: str, title_font, body_font, with_border: bool) -> None:

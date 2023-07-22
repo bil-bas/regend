@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.9
 
 import argparse
 
@@ -32,7 +32,7 @@ def parse(parser):
     if language == "or":
         font_file = "NotoSansOriya-Bold"
     else:
-        font_file = "Helvetica-Bold"
+        font_file = "Arimo-Bold"
 
     language_code = language[0:2]
 
