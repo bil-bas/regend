@@ -54,15 +54,17 @@ def draw_image(language_code: str, prefix: str, page, i: int, j: int, n: int):
     page.paste(image, box)
 
 
-def draw_label(label, language_code, draw, i: int, j: int, n: int, font, color, background_color=None) -> None:
+def draw_label(label: str, language_code: str, draw, i: int, j: int, font, color, background_color=None) -> None:
     width = font.getlength(label)
     pos = (
         i * PITCH + MARGIN_LEFT + (DIAMETER - width) // 2,
         j * PITCH + MARGIN_TOP + (DIAMETER - (44 if language_code == "or" else 36)),
     )
+
     if background_color is not None:
-        draw.rectangle((pos[0] - 2, pos[1] - 1, pos[0] + width + 4, pos[1] + FONT_HEIGHT_QR + 2),
-                       fill=background_color, outline=None)
+        for x, y in [(2, 0), (0, 2), (-2, 0), (0, -2)]:
+            draw.text((pos[0] + x, pos[1] + y), label, font=font, fill=background_color)
+
     draw.text(pos, label, font=font, fill=color)
 
 
@@ -77,7 +79,7 @@ def draw_images(t, prefix: str, language_code: str, font, with_border: bool):
         except FileNotFoundError:
             label = "?"
 
-        draw_label(label, language_code, im_draw, i, j, n, font, color=(0, 0, 0), background_color=(255, 255, 255))
+        draw_label(label, language_code, im_draw, i, j, font, color=(0, 0, 0), background_color=(255, 255, 255))
         if with_border:
             draw_circle(im_draw, i, j, diameter=DIAMETER, pitch=PITCH,
                         margin_top=MARGIN_TOP, margin_left=MARGIN_LEFT)
@@ -101,7 +103,7 @@ def draw_qr_codes(t, prefix: str, language_code: str, font, with_border: bool) -
             label = qr_label(prefix, n, language_code)
         else:
             label = t["joker"]
-        draw_label(label, language_code, qr_draw, i, j, n, font, color=(0, 0, 0))
+        draw_label(label, language_code, qr_draw, i, j, font, color=(0, 0, 0))
 
         if with_border:
             draw_circle(qr_draw, i, j, diameter=DIAMETER, pitch=PITCH,
