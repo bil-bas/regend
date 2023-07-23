@@ -1,7 +1,7 @@
 import segno
 from PIL import Image, ImageDraw
 
-from .utils import mm_to_px, stickers, draw_circle, A4_HEIGHT, A4_WIDTH, FONT_HEIGHT_QR
+from .utils import mm_to_px, stickers, draw_circle, A4_HEIGHT, A4_WIDTH
 
 
 DIAMETER = mm_to_px(51)
@@ -100,6 +100,7 @@ def draw_images(t, prefix: str, language_code: str, font, with_border: bool) -> 
 
     return num_tasks
 
+
 def qr_label(prefix, n, language_code):
     return f"{prefix}{n:02}{language_code if language_code != 'en' else ''}"
 
@@ -126,11 +127,11 @@ def draw_qr_codes(t, prefix: str, language_code: str, font, with_border: bool, n
     qr_page.save(f"./output/{language_code}_{prefix}_qr_codes{'_b' if with_border else ''}.png")
 
 
-def draw_discs(t, prefix, language_code, font):
+def draw_discs(t, prefix, language_code, font) -> int:
     draw_images(t, prefix, language_code, font, with_border=True)
     num_tasks = draw_images(t, prefix, language_code, font, with_border=False)
 
     draw_qr_codes(t, prefix, language_code, font, with_border=True, num_tasks=num_tasks)
     draw_qr_codes(t, prefix, language_code, font, with_border=False, num_tasks=num_tasks)
 
-
+    return num_tasks

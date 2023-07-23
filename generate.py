@@ -7,8 +7,8 @@ import datetime
 import polib
 from PIL import ImageFont
 
-from regend import discs_qr, discs_action, spinner_icons
-from regend.utils import FONT_HEIGHT_ACTION, FONT_HEIGHT_QR, svg_to_png
+from regend import discs_task, discs_action, spinner_icons, board_tasks, board_actions
+from regend.utils import FONT_HEIGHT_SMALL, FONT_HEIGHT_LARGE, svg_to_png
 
 
 def create_parser():
@@ -38,16 +38,18 @@ def parse(parser):
 
     language_code = language[0:2]
 
-    font_qr = ImageFont.truetype(f"./fonts/{font_file}.ttf", FONT_HEIGHT_QR)
-    font_action = ImageFont.truetype(f"./fonts/{font_file}.ttf", FONT_HEIGHT_ACTION)
+    font_large = ImageFont.truetype(f"./fonts/{font_file}.ttf", FONT_HEIGHT_LARGE)
+    font_small = ImageFont.truetype(f"./fonts/{font_file}.ttf", FONT_HEIGHT_SMALL)
 
     prefix = args.prefix.upper()
 
     spinner_icons.draw_spinner()
 
-    discs_qr.draw_discs(t=t, prefix=prefix, font=font_qr, language_code=language_code)
+    num_tasks = discs_task.draw_discs(t=t, prefix=prefix, font=font_large, language_code=language_code)
+    board_tasks.draw_circles(prefix=prefix, num_tasks=num_tasks)
 
-    discs_action.draw_discs(title_font=font_qr, body_font=font_action, t=t, language_code=language_code)
+    discs_action.draw_discs(title_font=font_large, body_font=font_small, t=t, language_code=language_code)
+    board_actions.draw_circles()
 
     date_str = datetime.date.today()
     file_str = f"output/regen-d_{prefix}_{language_code}_{date_str}.zip"
@@ -59,8 +61,9 @@ def parse(parser):
         zipped.write(f"output/{language_code}_{prefix}_images_b.png", "tasks_front.png")
         zipped.write(f"output/{language_code}_{prefix}_qr_codes_b.png", "tasks_back.png")
 
-        zipped.write(f"designs/spinner.svg", "spinner.svg")
-        zipped.write(f"output/spinner.png", "spinner.png")
+        zipped.write("output/spinner.png", "spinner.png")
+        zipped.write("output/board_actions.png", "board_actions.png")
+        zipped.write(f"output/{prefix}_board_tasks.png", "board_tasks.png")
 
 
 if __name__ == "__main__":

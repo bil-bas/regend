@@ -3,7 +3,7 @@ import re
 from PIL import Image, ImageDraw
 
 from .utils import (mm_to_px, stickers, draw_circle, get_wrapped_text, A4_WIDTH, A4_HEIGHT,
-                    FONT_HEIGHT_ACTION, FONT_HEIGHT_QR)
+                    FONT_HEIGHT_SMALL, FONT_HEIGHT_LARGE)
 
 DIAMETER = mm_to_px(37)
 PITCH = mm_to_px(39)
@@ -60,13 +60,13 @@ def draw_text(draw, i: int, j: int, text: str, title_font, body_font) -> None:
         title, body = re.split(r" *: *", text)
 
         draw_text_line(draw, i, j, y_offset, title, title_font)
-        y_offset += FONT_HEIGHT_QR + 8
+        y_offset += FONT_HEIGHT_LARGE + 8
     except ValueError:
         body = text
 
     for line in get_wrapped_text(text=body, font=body_font, line_length=MAX_LINE_LENGTH):
         draw_text_line(draw, i, j, y_offset, line, body_font)
-        y_offset += FONT_HEIGHT_ACTION + 4
+        y_offset += FONT_HEIGHT_SMALL + 4
 
 
 def draw_text_discs(t: hash, language_code: str, title_font, body_font, with_border: bool) -> None:
