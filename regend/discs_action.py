@@ -9,7 +9,7 @@ DIAMETER = mm_to_px(37)
 PITCH = mm_to_px(39)
 MARGIN_LEFT = mm_to_px(8.5)
 MARGIN_TOP = mm_to_px(13)
-MAX_LINE_LENGTH = mm_to_px(30)
+MAX_LINE_LENGTH = mm_to_px(28)
 
 
 def name(index):

@@ -1,12 +1,14 @@
 #!/usr/bin/env python3.9
 
 import argparse
+import zipfile
+import datetime
 
 import polib
 from PIL import ImageFont
 
 from regend import discs_qr, discs_action, spinner_icons
-from regend.utils import FONT_HEIGHT_ACTION, FONT_HEIGHT_QR
+from regend.utils import FONT_HEIGHT_ACTION, FONT_HEIGHT_QR, svg_to_png
 
 
 def create_parser():
@@ -46,6 +48,19 @@ def parse(parser):
     discs_qr.draw_discs(t=t, prefix=prefix, font=font_qr, language_code=language_code)
 
     discs_action.draw_discs(title_font=font_qr, body_font=font_action, t=t, language_code=language_code)
+
+    date_str = datetime.date.today()
+    file_str = f"output/regen-d_{prefix}_{language_code}_{date_str}.zip"
+    svg_to_png("spinner.svg")
+    with zipfile.ZipFile(file_str, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zipped:
+        zipped.write("output/actions_icon_b.png", "actions_front.png")
+        zipped.write(f"output/{language_code}_actions_text_b.png", "actions_back.png")
+
+        zipped.write(f"output/{language_code}_{prefix}_images_b.png", "tasks_front.png")
+        zipped.write(f"output/{language_code}_{prefix}_qr_codes_b.png", "tasks_back.png")
+
+        zipped.write(f"designs/spinner.svg", "spinner.svg")
+        zipped.write(f"output/spinner.png", "spinner.png")
 
 
 if __name__ == "__main__":

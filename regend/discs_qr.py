@@ -10,6 +10,14 @@ MARGIN_LEFT = mm_to_px(26.5)
 MARGIN_TOP = mm_to_px(17)
 
 
+def draw_joker_icon(page, i: int, j: int) -> None:
+    icon = Image.open("./images/joker_mini.png")
+
+    x = i * PITCH + MARGIN_LEFT + round((DIAMETER - icon.width) / 2)
+    y = j * PITCH + MARGIN_TOP + 12
+    page.paste(icon, (x, y))
+
+
 def draw_qr_code(prefix: str, language_code: str, page, i: int, j: int, n: int) -> None:
     # Draw QR tag.
     qr_code = segno.make(f"https://ishara.uk/{prefix}{n:02}{language_code if language_code != 'en' else ''}")
@@ -68,16 +76,20 @@ def draw_label(label: str, language_code: str, draw, i: int, j: int, font, color
     draw.text(pos, label, font=font, fill=color)
 
 
-def draw_images(t, prefix: str, language_code: str, font, with_border: bool):
+def draw_images(t, prefix: str, language_code: str, font, with_border: bool) -> int:
     im_page = Image.new("RGBA", (A4_WIDTH, A4_HEIGHT), (255, 255, 255, 255))
     im_draw = ImageDraw.Draw(im_page)
 
+    num_tasks = None
     for i, j, n in stickers(3, 5):
         try:
             draw_image(language_code=language_code, prefix=prefix, page=im_page, i=i, j=j, n=n)
             label = qr_label(prefix=prefix, n=n, language_code=language_code)
         except FileNotFoundError:
-            label = "?"
+            label = t["joker"]
+            draw_joker_icon(im_page, i, j)
+            if num_tasks is None:
+                num_tasks = n - 1
 
         draw_label(label, language_code, im_draw, i, j, font, color=(0, 0, 0), background_color=(255, 255, 255))
         if with_border:
@@ -86,22 +98,24 @@ def draw_images(t, prefix: str, language_code: str, font, with_border: bool):
 
     im_page.save(f"./output/{language_code}_{prefix}_images{'_b' if with_border else ''}.png")
 
+    return num_tasks
 
 def qr_label(prefix, n, language_code):
     return f"{prefix}{n:02}{language_code if language_code != 'en' else ''}"
 
 
-def draw_qr_codes(t, prefix: str, language_code: str, font, with_border: bool) -> None:
+def draw_qr_codes(t, prefix: str, language_code: str, font, with_border: bool, num_tasks: int) -> None:
     qr_page = Image.new("RGBA", (A4_WIDTH, A4_HEIGHT), (255, 255, 255, 255))
     qr_draw = ImageDraw.Draw(qr_page)
 
-    for i, j, n in stickers(3, 5, 12):
+    for i, j, n in stickers(3, 5, num_tasks):
         draw_qr_code(prefix, language_code, qr_page, i, j, n)
 
     for i, j, n in stickers(3, 5):
-        if n <= 12:
+        if n <= num_tasks:
             label = qr_label(prefix, n, language_code)
         else:
+            draw_joker_icon(qr_page, i, j)
             label = t["joker"]
         draw_label(label, language_code, qr_draw, i, j, font, color=(0, 0, 0))
 
@@ -114,9 +128,9 @@ def draw_qr_codes(t, prefix: str, language_code: str, font, with_border: bool) -
 
 def draw_discs(t, prefix, language_code, font):
     draw_images(t, prefix, language_code, font, with_border=True)
-    draw_images(t, prefix, language_code, font, with_border=False)
+    num_tasks = draw_images(t, prefix, language_code, font, with_border=False)
 
-    draw_qr_codes(t, prefix, language_code, font, with_border=True)
-    draw_qr_codes(t, prefix, language_code, font, with_border=False)
+    draw_qr_codes(t, prefix, language_code, font, with_border=True, num_tasks=num_tasks)
+    draw_qr_codes(t, prefix, language_code, font, with_border=False, num_tasks=num_tasks)
 
 

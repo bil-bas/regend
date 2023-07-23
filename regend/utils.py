@@ -1,3 +1,5 @@
+import subprocess
+
 import polib
 from PIL import ImageFont, ImageDraw
 
@@ -46,3 +48,9 @@ def get_wrapped_text(text: str, font: ImageFont, line_length: int):
             lines.append(word)
 
     return lines
+
+
+def svg_to_png(in_file: str):
+    out_file = in_file.replace(".svg", "") + ".png"
+
+    subprocess.check_call(["inkscape", f"--export-png=output/{out_file}", f"designs/{in_file}"])
