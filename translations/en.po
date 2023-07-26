@@ -12,7 +12,7 @@ msgstr ""
 "X-Generator: Poedit 3.3.2\n"
 
 msgid "link"
-msgstr "Link: Make a link between two discs"
+msgstr "Link: Make a link between two disks"
 
 msgid "evaluate"
 msgstr "Evaluate: Discuss positives and negatives"
