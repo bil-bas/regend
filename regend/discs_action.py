@@ -29,8 +29,8 @@ def draw_icon(page, icons: dict, i: int, j: int) -> None:
 
 def draw_icon_discs(with_border: bool) -> None:
     icons = {
-        "link": Image.open("./images/link.png"),
-        "evaluate": Image.open("./images/evaluate.png"),
+        "link": Image.open("./images/icons/link.png"),
+        "evaluate": Image.open("./images/icons/evaluate.png"),
     }
 
     page = Image.new("RGBA", (A4_WIDTH, A4_HEIGHT), (255, 255, 255, 255))

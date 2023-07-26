@@ -29,7 +29,7 @@ def draw_line(draw, i):
 
 
 def draw_spinner():
-    icons = {name: Image.open(f"./images/{name}.png") for name in set(ICONS)}
+    icons = {name: Image.open(f"./images/icons/{name}.png") for name in set(ICONS)}
 
     page = Image.new("RGBA", (A4_WIDTH, A4_HEIGHT), (255, 255, 255, 255))
     draw = ImageDraw.Draw(page)

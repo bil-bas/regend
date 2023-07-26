@@ -11,7 +11,7 @@ MARGIN_TOP = mm_to_px(17)
 
 
 def draw_joker_icon(page, i: int, j: int) -> None:
-    icon = Image.open("./images/joker_mini.png")
+    icon = Image.open("./images/icons/joker_mini.png")
 
     x = i * PITCH + MARGIN_LEFT + round((DIAMETER - icon.width) / 2)
     y = j * PITCH + MARGIN_TOP + 12
