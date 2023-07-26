@@ -55,15 +55,15 @@ def parse(parser):
     file_str = f"output/regen-d_{prefix}_{language_code}_{date_str}.zip"
     svg_to_png("spinner.svg")
     with zipfile.ZipFile(file_str, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zipped:
-        zipped.write("output/actions_icon_b.png", "actions_front.png")
-        zipped.write(f"output/{language_code}_actions_text_b.png", "actions_back.png")
+        zipped.write("output/actions_icon_b.png", "action_disks_front.png")
+        zipped.write(f"output/{language_code}_actions_text_b.png", "action_disks_back.png")
 
-        zipped.write(f"output/{language_code}_{prefix}_images_b.png", "tasks_front.png")
-        zipped.write(f"output/{language_code}_{prefix}_qr_codes_b.png", "tasks_back.png")
+        zipped.write(f"output/{language_code}_{prefix}_images_b.png", "task_disks_front.png")
+        zipped.write(f"output/{language_code}_{prefix}_qr_codes_b.png", "task_disks_back.png")
 
         zipped.write("output/spinner.png", "spinner.png")
-        zipped.write("output/board_actions.png", "board_actions.png")
-        zipped.write(f"output/{prefix}_board_tasks.png", "board_tasks.png")
+        zipped.write("output/board_actions.png", "actions_board_optional.png")
+        zipped.write(f"output/{prefix}_board_tasks.png", "tasks_board_optional.png")
 
 
 if __name__ == "__main__":
