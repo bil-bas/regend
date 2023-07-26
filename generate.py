@@ -3,6 +3,7 @@
 import argparse
 import zipfile
 import datetime
+import yaml
 
 import polib
 from PIL import ImageFont
@@ -43,9 +44,12 @@ def parse(parser):
 
     prefix = args.prefix.upper()
 
+    with open(f"images/{prefix}/meta.yaml") as f:
+        config = yaml.load(f, Loader=yaml.SafeLoader)
+
     spinner_icons.draw_spinner()
 
-    num_tasks = discs_task.draw_discs(t=t, prefix=prefix, font=font_large, language_code=language_code)
+    num_tasks = discs_task.draw_discs(t=t, prefix=prefix, font=font_large, language_code=language_code, config=config)
     board_tasks.draw_circles(prefix=prefix, num_tasks=num_tasks)
 
     discs_action.draw_discs(title_font=font_large, body_font=font_small, t=t, language_code=language_code)

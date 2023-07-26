@@ -4,7 +4,7 @@
 #
 #    pip-compile
 #
-pillow==9.5.0
+pillow==10.0.0
     # via
     #   -r requirements.in
     #   segno-pil
@@ -12,3 +12,4 @@ segno==1.5.2
     # via segno-pil
 segno-pil==1.0.0
     # via -r requirements.in
+pyyaml==6.0.1

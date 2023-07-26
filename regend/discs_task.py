@@ -76,7 +76,7 @@ def draw_label(label: str, language_code: str, draw, i: int, j: int, font, color
     draw.text(pos, label, font=font, fill=color)
 
 
-def draw_images(t, prefix: str, language_code: str, font, with_border: bool) -> int:
+def draw_images(t, prefix: str, language_code: str, font, with_border: bool, config: hash) -> int:
     im_page = Image.new("RGBA", (A4_WIDTH, A4_HEIGHT), (255, 255, 255, 255))
     im_draw = ImageDraw.Draw(im_page)
 
@@ -91,7 +91,8 @@ def draw_images(t, prefix: str, language_code: str, font, with_border: bool) -> 
             if num_tasks is None:
                 num_tasks = n - 1
 
-        draw_label(label, language_code, im_draw, i, j, font, color=(0, 0, 0), background_color=(255, 255, 255))
+        text_color = (200, 0, 0) if n in config["hints"] else (0, 0, 0)
+        draw_label(label, language_code, im_draw, i, j, font, color=text_color, background_color=(255, 255, 255))
         if with_border:
             draw_circle(im_draw, i, j, diameter=DIAMETER, pitch=PITCH,
                         margin_top=MARGIN_TOP, margin_left=MARGIN_LEFT)
@@ -105,7 +106,7 @@ def qr_label(prefix, n, language_code):
     return f"{prefix}{n:02}{language_code if language_code != 'en' else ''}"
 
 
-def draw_qr_codes(t, prefix: str, language_code: str, font, with_border: bool, num_tasks: int) -> None:
+def draw_qr_codes(t, prefix: str, language_code: str, font, with_border: bool, num_tasks: int, config: hash) -> None:
     qr_page = Image.new("RGBA", (A4_WIDTH, A4_HEIGHT), (255, 255, 255, 255))
     qr_draw = ImageDraw.Draw(qr_page)
 
@@ -118,7 +119,9 @@ def draw_qr_codes(t, prefix: str, language_code: str, font, with_border: bool, n
         else:
             draw_joker_icon(qr_page, i, j)
             label = t["joker"]
-        draw_label(label, language_code, qr_draw, i, j, font, color=(0, 0, 0))
+
+        text_color = (200, 0, 0) if n in config["hints"] else (0, 0, 0)
+        draw_label(label, language_code, qr_draw, i, j, font, color=text_color)
 
         if with_border:
             draw_circle(qr_draw, i, j, diameter=DIAMETER, pitch=PITCH,
@@ -127,11 +130,11 @@ def draw_qr_codes(t, prefix: str, language_code: str, font, with_border: bool, n
     qr_page.save(f"./output/{language_code}_{prefix}_qr_codes{'_b' if with_border else ''}.png")
 
 
-def draw_discs(t, prefix, language_code, font) -> int:
-    draw_images(t, prefix, language_code, font, with_border=True)
-    num_tasks = draw_images(t, prefix, language_code, font, with_border=False)
+def draw_discs(t: hash, prefix: str, language_code: str, font, config: hash) -> int:
+    draw_images(t, prefix, language_code, font, config=config, with_border=True)
+    num_tasks = draw_images(t, prefix, language_code, font, config=config, with_border=False)
 
-    draw_qr_codes(t, prefix, language_code, font, with_border=True, num_tasks=num_tasks)
-    draw_qr_codes(t, prefix, language_code, font, with_border=False, num_tasks=num_tasks)
+    draw_qr_codes(t, prefix, language_code, font, with_border=True, config=config, num_tasks=num_tasks)
+    draw_qr_codes(t, prefix, language_code, font, with_border=False, config=config, num_tasks=num_tasks)
 
     return num_tasks
