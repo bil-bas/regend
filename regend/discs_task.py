@@ -1,7 +1,7 @@
 import segno
 from PIL import Image, ImageDraw
 
-from .utils import mm_to_px, stickers, draw_circle, A4_HEIGHT, A4_WIDTH
+from .utils import mm_to_px, stickers, draw_circle, A4_HEIGHT, A4_WIDTH, LINE_WIDTH
 
 
 DIAMETER = mm_to_px(51)
@@ -46,8 +46,8 @@ def image_file(language_code: str, prefix: str, n: int):
 
 def draw_image(language_code: str, prefix: str, page, i: int, j: int, n: int):
     box = (
-        i * PITCH + MARGIN_LEFT, j * PITCH + MARGIN_TOP,
-        i * PITCH + PITCH + MARGIN_LEFT, j * PITCH + PITCH + MARGIN_TOP
+        i * PITCH + MARGIN_LEFT - 3, j * PITCH + MARGIN_TOP - 3,
+        i * PITCH + PITCH + MARGIN_LEFT - 3, j * PITCH + PITCH + MARGIN_TOP - 3
     )
     image = image_file(language_code=language_code, prefix=prefix, n=n)
 
@@ -130,11 +130,35 @@ def draw_qr_codes(t, prefix: str, language_code: str, font, with_border: bool, n
     qr_page.save(f"./output/{language_code}_{prefix}_qr_codes{'_b' if with_border else ''}.png")
 
 
+def draw_single_qr_code(t, prefix: str, language_code: str, font, index: int, config: hash) -> None:
+    qr_image = Image.new("RGBA", (DIAMETER, DIAMETER), (255, 255, 255, 255))
+    qr_draw = ImageDraw.Draw(qr_image)
+
+    # QR code
+    qr_code = segno.make(f"https://ishara.uk/{prefix}{index:02}{language_code if language_code != 'en' else ''}")
+    qr_code = qr_code.to_pil(scale=5)
+    qr_image.paste(qr_code, ((DIAMETER - qr_code.width) // 2, (DIAMETER - qr_code.height) // 2 - 5))
+
+    # Label
+    label = qr_label(prefix, index, language_code)
+    width = font.getlength(label)
+    v_offset = (DIAMETER - (44 if language_code == "or" else 36))
+    qr_draw.text(((DIAMETER - width) // 2, v_offset), label, font=font, fill=(0, 0, 0))
+
+    # circle
+    qr_draw.ellipse((0, 0, DIAMETER - 1, DIAMETER - 1), fill=None, outline=(0, 0, 0), width=LINE_WIDTH)
+
+    qr_image.save(f"./output/qr_codes/{prefix}_{label}.png")
+
+
 def draw_discs(t: hash, prefix: str, language_code: str, font, config: hash) -> int:
     draw_images(t, prefix, language_code, font, config=config, with_border=True)
     num_tasks = draw_images(t, prefix, language_code, font, config=config, with_border=False)
 
     draw_qr_codes(t, prefix, language_code, font, with_border=True, config=config, num_tasks=num_tasks)
     draw_qr_codes(t, prefix, language_code, font, with_border=False, config=config, num_tasks=num_tasks)
+
+    for i in range(num_tasks):
+        draw_single_qr_code(t, prefix, language_code, font, index=i + 1, config=config)
 
     return num_tasks

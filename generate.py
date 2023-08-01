@@ -3,6 +3,7 @@
 import argparse
 import zipfile
 import datetime
+import os
 import yaml
 
 import polib
@@ -44,6 +45,9 @@ def parse(parser):
 
     prefix = args.prefix.upper()
 
+    for folder in ("output/releases", "output/qr_codes"):
+        os.makedirs(folder, exist_ok=True)
+
     with open(f"images/{prefix}/meta.yaml") as f:
         config = yaml.load(f, Loader=yaml.SafeLoader)
 
@@ -56,7 +60,7 @@ def parse(parser):
     board_actions.draw_circles()
 
     date_str = datetime.date.today()
-    file_str = f"output/regen-d_{prefix}_{language_code}_{date_str}.zip"
+    file_str = f"output/releases/regen-d_{prefix}_{language_code}_{date_str}.zip"
     svg_to_png("spinner.svg")
     with zipfile.ZipFile(file_str, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zipped:
         zipped.write("output/actions_icon_b.png", "action_disks_front.png")
@@ -66,8 +70,8 @@ def parse(parser):
         zipped.write(f"output/{language_code}_{prefix}_qr_codes_b.png", "task_disks_back.png")
 
         zipped.write("output/spinner.png", "spinner.png")
-        zipped.write("output/board_actions.png", "actions_board_optional.png")
-        zipped.write(f"output/{prefix}_board_tasks.png", "tasks_board_optional.png")
+        zipped.write("output/board_actions.png", "extras/actions_board.png")
+        zipped.write(f"output/{prefix}_board_tasks.png", "extras/tasks_board.png")
 
 
 if __name__ == "__main__":
