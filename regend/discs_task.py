@@ -18,6 +18,14 @@ def draw_joker_icon(page, i: int, j: int) -> None:
     page.paste(icon, (x, y))
 
 
+def draw_bank_icon(page, i: int, j: int) -> None:
+    icon = Image.open("./images/icons/joker_bank.png")
+
+    x = i * PITCH + MARGIN_LEFT + round((DIAMETER - icon.width) / 2)
+    y = j * PITCH + MARGIN_TOP + 12
+    page.paste(icon, (x, y))
+
+
 def draw_qr_code(prefix: str, language_code: str, page, i: int, j: int, n: int) -> None:
     # Draw QR tag.
     qr_code = segno.make(f"https://ishara.uk/{prefix}{n:02}{language_code if language_code != 'en' else ''}")
@@ -87,7 +95,12 @@ def draw_images(t, prefix: str, language_code: str, font, with_border: bool, con
             label = qr_label(prefix=prefix, n=n, language_code=language_code)
         except FileNotFoundError:
             label = t["joker"]
+
+            if prefix == "LL" and n == 15:
+                draw_bank_icon(im_page, i, j)
+
             draw_joker_icon(im_page, i, j)
+
             if num_tasks is None:
                 num_tasks = n - 1
 
@@ -117,8 +130,11 @@ def draw_qr_codes(t, prefix: str, language_code: str, font, with_border: bool, n
         if n <= num_tasks:
             label = qr_label(prefix, n, language_code)
         else:
-            draw_joker_icon(qr_page, i, j)
             label = t["joker"]
+            if prefix == "LL" and n == 15:
+                draw_bank_icon(qr_page, i, j)
+
+            draw_joker_icon(qr_page, i, j)
 
         text_color = (200, 0, 0) if n in config["hints"] else (0, 0, 0)
         draw_label(label, language_code, qr_draw, i, j, font, color=text_color)

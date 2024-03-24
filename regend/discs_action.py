@@ -7,7 +7,7 @@ from .utils import (mm_to_px, stickers, draw_circle, get_wrapped_text, A4_WIDTH,
 
 DIAMETER = mm_to_px(37)
 PITCH = mm_to_px(39)
-MARGIN_LEFT = mm_to_px(8.5)
+MARGIN_LEFT = mm_to_px(8.5 - 1)  # Always prints with a left margin.
 MARGIN_TOP = mm_to_px(13)
 MAX_LINE_LENGTH = mm_to_px(28)
 
