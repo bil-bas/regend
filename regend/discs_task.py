@@ -69,7 +69,7 @@ def draw_label(label: str, language_code: str, sticker, sticker_draw, font, colo
     width = font.getlength(label)
     pos = (
         (sticker.width - width) // 2,
-        (sticker.height - (44 if language_code == "or" else 36)),
+        (sticker.height - (48 if language_code == "or" else 40)),
     )
 
     # Shake to draw an outline around the text.
