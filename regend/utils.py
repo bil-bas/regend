@@ -1,7 +1,7 @@
 import subprocess
 
 import polib
-from PIL import ImageFont, ImageDraw
+from PIL import ImageFont, ImageDraw, ImageOps, Image
 
 MM_TO_PX = 3.7795275591
 FONT_HEIGHT_LARGE = 26
@@ -27,18 +27,16 @@ def stickers(x: int, y: int, limit: int = None) -> (int, int, int):
             yield i, j, n
 
 
-def draw_circle(draw: ImageDraw, i: int, j: int, diameter: int, pitch: int, margin_left: int, margin_top: int):
-    draw.ellipse((
-            i * pitch + margin_left, j * pitch + margin_top,
-            i * pitch + diameter + margin_left, j * pitch + diameter + margin_top
-        ),
+def draw_circle(draw: ImageDraw, diameter: int, offset: int) -> None:
+    draw.ellipse(
+        (offset, offset, diameter, diameter),
         fill=None,
         outline=(0, 0, 0),
         width=LINE_WIDTH,
     )
 
 
-def get_wrapped_text(text: str, font: ImageFont, line_length: int):
+def get_wrapped_text(text: str, font: ImageFont, line_length: int) -> [str]:
     lines = ['']
     for word in text.split():
         line = f'{lines[-1]} {word}'.strip()
@@ -50,7 +48,7 @@ def get_wrapped_text(text: str, font: ImageFont, line_length: int):
     return lines
 
 
-def svg_to_png(in_file: str):
+def svg_to_png(in_file: str) -> None:
     out_file = in_file.replace(".svg", "") + ".png"
 
     subprocess.check_call(["inkscape", f"--export-png=output/{out_file}", f"designs/{in_file}"])
