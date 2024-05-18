@@ -121,18 +121,18 @@ def qr_label(prefix, n, language_code):
     return f"{prefix}{n:02}{language_code if language_code != 'en' else ''}"
 
 
-def draw_qr_codes(t, prefix: str, language_code: str, with_border: bool, num_tasks: int, config: hash) -> None:
+def draw_qr_codes(t, prefix: str, language_code: str, with_border: bool, config: hash) -> None:
     for i, j, n in stickers(3, 5):
         sticker = svg.Group(transform=f"translate({MARGIN_TOP + i * PITCH}, {MARGIN_LEFT + j * PITCH})")
 
-        sticker.extend(single_qr_code(config=config, language_code=language_code, n=n, num_tasks=num_tasks,
+        sticker.extend(single_qr_code(config=config, language_code=language_code, n=n,
                                       prefix=prefix, t=t, with_border=with_border))
 
         yield sticker
 
 
-def single_qr_code(config, language_code, n, num_tasks, prefix, t, with_border):
-    if n <= num_tasks:
+def single_qr_code(config, language_code, n, prefix, t, with_border):
+    if n <= config["num_tasks"]:
         yield draw_qr_code(prefix, language_code, n)
         label = qr_label(prefix, n, language_code)
     else:
@@ -149,26 +149,22 @@ def single_qr_code(config, language_code, n, num_tasks, prefix, t, with_border):
         yield svg.Circle(PITCH / 2, PITCH / 2, DIAMETER / 2, fill="none", stroke="black")
 
 
-def draw_discs(t: hash, prefix: str, language_code: str, config: hash) -> int:
+def draw_discs(t: hash, prefix: str, language_code: str, config: hash) -> None:
     with create_page(f"{language_code}_{prefix}_images_b", format="pdf", language_code=language_code) as page:
         page.extend(draw_images(t, prefix, language_code, config=config, with_border=True))
 
     with create_page(f"{language_code}_{prefix}_images", format="pdf", language_code=language_code) as page:
         page.extend(draw_images(t, prefix, language_code, config=config, with_border=False))
 
-    num_tasks = 12
-
     with create_page(f"{language_code}_{prefix}_qr_codes_b", format="pdf", language_code=language_code) as page:
-        page.extend(draw_qr_codes(t, prefix, language_code, with_border=True, config=config, num_tasks=num_tasks))
+        page.extend(draw_qr_codes(t, prefix, language_code, with_border=True, config=config))
 
     with create_page(f"{language_code}_{prefix}_qr_codes", format="pdf", language_code=language_code) as page:
-        page.extend(draw_qr_codes(t, prefix, language_code, with_border=False, config=config, num_tasks=num_tasks))
+        page.extend(draw_qr_codes(t, prefix, language_code, with_border=False, config=config))
 
-    for i in range(num_tasks):
+    for i in range(config["num_tasks"]):
         label = qr_label(prefix, i, language_code)
         with create_page(f"qr_codes/{prefix}_{label}", format="png", width=DIAMETER, height=DIAMETER,
                          language_code=language_code) as page:
             page.extend(single_qr_code(config=config, language_code=language_code, n=i + 1, prefix=prefix, t=t,
-                                       with_border=True, num_tasks=num_tasks))
-
-    return num_tasks
+                                       with_border=True))
