@@ -150,18 +150,18 @@ def single_qr_code(config, language_code, n, num_tasks, prefix, t, with_border):
 
 
 def draw_discs(t: hash, prefix: str, language_code: str, config: hash) -> int:
-    with create_page(f"{language_code}_{prefix}_images_b", format="svg", language_code=language_code) as page:
+    with create_page(f"{language_code}_{prefix}_images_b", format="pdf", language_code=language_code) as page:
         page.extend(draw_images(t, prefix, language_code, config=config, with_border=True))
 
-    with create_page(f"{language_code}_{prefix}_images", format="svg", language_code=language_code) as page:
+    with create_page(f"{language_code}_{prefix}_images", format="pdf", language_code=language_code) as page:
         page.extend(draw_images(t, prefix, language_code, config=config, with_border=False))
 
     num_tasks = 12
 
-    with create_page(f"{language_code}_{prefix}_qr_codes_b", format="svg", language_code=language_code) as page:
+    with create_page(f"{language_code}_{prefix}_qr_codes_b", format="pdf", language_code=language_code) as page:
         page.extend(draw_qr_codes(t, prefix, language_code, with_border=True, config=config, num_tasks=num_tasks))
 
-    with create_page(f"{language_code}_{prefix}_qr_codes", format="svg", language_code=language_code) as page:
+    with create_page(f"{language_code}_{prefix}_qr_codes", format="pdf", language_code=language_code) as page:
         page.extend(draw_qr_codes(t, prefix, language_code, with_border=False, config=config, num_tasks=num_tasks))
 
     for i in range(num_tasks):
