@@ -1,4 +1,8 @@
+drawsvg[all]
+PyPDF2
+ReportLab
+svglib
 Pillow
 segno-pil
-libpo
 pyyaml
+drawsvg

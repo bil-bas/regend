@@ -4,10 +4,6 @@
 #
 #    pip-compile
 #
-pillow==10.0.0
-    # via
-    #   -r requirements.in
-    #   segno-pil
 segno==1.5.2
     # via segno-pil
 segno-pil==1.0.0
