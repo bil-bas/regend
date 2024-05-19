@@ -14,9 +14,8 @@ ICON_WIDTH = 50
 
 
 def draw_spinner():
-    for format_ in ["svg", "pdf"]:
-        with create_page("spinner", format=format_) as page:
-            page.extend(spinner())
+    with create_page("spinner", "svg,pdf") as page:
+        page.extend(spinner())
 
 
 def spinner():
@@ -30,11 +29,11 @@ def spinner():
         angle = -90 + 360 * i / len(ICONS)
         content.append(svg.Image(-ICON_WIDTH / 2, -ICON_WIDTH / 2, ICON_WIDTH, ICON_WIDTH,
                                  f"./images/icons/{icon}.png", embed=True,
-                                 transform=f"rotate({angle}), translate({RADIUS}, 0), rotate(90)"))
+                                 transform=f"rotate({angle}) translate({RADIUS}, 0), rotate(90)"))
 
         angle = 360 * (i + 0.5) / len(ICONS)
         content.append(svg.Rectangle(0, -LINE_WIDTH / 2, LINE_LENGTH, LINE_WIDTH, fill=Color.ENGRAVE,
-                                     transform=f"rotate({angle}), translate({RADIUS - LINE_LENGTH / 2}, 0)"))
+                                     transform=f"rotate({angle}) translate({RADIUS - LINE_LENGTH / 2}, 0)"))
 
     yield content
 

@@ -9,9 +9,9 @@ NUM_ACTIONS = 7
 
 
 def draw_circles() -> None:
-    with create_page("board_actions", format="pdf") as page:
+    with create_page("board_actions", "pdf, svg") as page:
         for n in range(NUM_ACTIONS):
             angle = n * 360 / NUM_ACTIONS
-            transform = f"translate({A4_WIDTH / 2}, {A4_HEIGHT / 2}), rotate({angle}), translate({FULL_RADIUS}, 0)"
+            transform = f"translate({A4_WIDTH // 2}, {A4_HEIGHT // 2}) rotate({angle:.1f}) translate({FULL_RADIUS:.1f}, 0)"
             page.append(svg.Circle(0, 0, CIRCLE_RADIUS, stroke=Color.DRAW, fill="none", stroke_width=LINE_WIDTH,
                         transform=transform))

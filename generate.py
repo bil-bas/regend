@@ -5,12 +5,11 @@ import zipfile
 import datetime
 import os
 import yaml
+import time
 
 import polib
-from PIL import ImageFont
 
 from regend import discs_task, discs_action, spinner_base, board_tasks, board_actions
-from regend.utils import FONT_HEIGHT_SMALL, FONT_HEIGHT_LARGE, svg_to_png
 
 
 def create_parser():
@@ -43,6 +42,8 @@ def parse(parser):
     with open(f"images/{prefix}/meta.yaml") as f:
         config = yaml.load(f, Loader=yaml.SafeLoader)
 
+    start = time.perf_counter()
+
     spinner_base.draw_spinner()
 
     discs_task.draw_discs(t=t, prefix=prefix, language_code=language_code, config=config)
@@ -66,6 +67,8 @@ def parse(parser):
 
         zipped.write("output/board_actions.pdf", "extras/actions_board.pdf")
         zipped.write(f"output/{prefix}_board_tasks.pdf", "extras/tasks_board.pdf")
+
+    print(f"Completed in {time.perf_counter() - start:.1f}s")
 
 
 if __name__ == "__main__":

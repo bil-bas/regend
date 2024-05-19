@@ -10,7 +10,7 @@ LINE_WIDTH = mm_to_px(3)
 
 
 def draw_circles(prefix: str, num_tasks: int) -> None:
-    with create_page(f"{prefix}_board_tasks", format="pdf") as page:
+    with create_page(f"{prefix}_board_tasks", "pdf") as page:
         for i, j, _ in stickers(3, 5, num_tasks + 2):
             x, y = MARGIN_LEFT + (i + 0.5) * PITCH, MARGIN_TOP + (j + 0.5) * PITCH
             page.append(svg.Circle(x, y, RADIUS, fill="none", stroke="black", stroke_width=LINE_WIDTH))

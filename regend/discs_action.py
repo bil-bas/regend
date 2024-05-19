@@ -43,13 +43,15 @@ def draw_text(text: str, language_code: str) -> None:
     try:
         title, body = re.split(r" *: *", text)
 
-        yield svg.Text(title, FONT_HEIGHT_LARGE, PITCH / 2, y_offset, center=True, font_family=font_family)
+        yield svg.Text(title, FONT_HEIGHT_LARGE, PITCH / 2, y_offset, center=True, font_family=font_family,
+                       font_weight="bold")
         y_offset += FONT_HEIGHT_LARGE + 8
     except ValueError:
         body = text
 
     wrapped = textwrap.fill(body, MAX_LINE_LENGTH)
-    yield svg.Text(wrapped, FONT_HEIGHT_SMALL, PITCH / 2, y_offset, center=True, font_family=font_family)
+    yield svg.Text(wrapped, FONT_HEIGHT_SMALL, PITCH / 2, y_offset, center=True, font_family=font_family,
+                   font_weight="bold")
 
 
 def draw_text_discs(t: hash, language_code: str, with_border: bool) -> None:
@@ -62,14 +64,14 @@ def draw_text_discs(t: hash, language_code: str, with_border: bool) -> None:
 
 
 def draw_discs(t: hash, language_code: str) -> None:
-    with create_page("actions_icon_b", format="pdf", language_code=language_code) as page:
+    with create_page("actions_icon_b", "pdf", language_code=language_code) as page:
         page.extend(draw_icon_discs(with_border=True))
 
-    with create_page("actions_icon", format="pdf", language_code=language_code) as page:
+    with create_page("actions_icon", "pdf", language_code=language_code) as page:
         page.extend(draw_icon_discs(with_border=False))
 
-    with create_page(f"{language_code}_actions_text_b", format="pdf", language_code=language_code) as page:
+    with create_page(f"{language_code}_actions_text_b", "pdf", language_code=language_code) as page:
         page.extend(draw_text_discs(t=t, language_code=language_code, with_border=True))
 
-    with create_page(f"{language_code}_actions_text", format="pdf", language_code=language_code) as page:
+    with create_page(f"{language_code}_actions_text", "pdf", language_code=language_code) as page:
         page.extend(draw_text_discs(t=t, language_code=language_code, with_border=False))

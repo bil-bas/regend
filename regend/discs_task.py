@@ -72,7 +72,7 @@ def draw_image(language_code: str, prefix: str, n: int, crop_circle=False):
         mask = Image.new('L', image.size, color=0)
         draw = ImageDraw.Draw(mask)
         offset = int(round((PITCH - DIAMETER) / 2) * scale)
-        draw.ellipse((offset, offset, DIAMETER * scale + 7, DIAMETER * scale + 7), fill=255)
+        draw.ellipse((offset, offset, (DIAMETER + 3) * scale, (DIAMETER + 3) * scale), fill=255)
         round_image.paste(image, (0, 0), mask=mask)
         image = round_image
 
@@ -81,16 +81,16 @@ def draw_image(language_code: str, prefix: str, n: int, crop_circle=False):
     return svg.Image(0, 0, PITCH, PITCH, data=data.getvalue(), mime_type="image/png", embed=True)
 
 
-def draw_label(label: str, language_code: str, font_size: float, color, background_color=None) -> None:
+def draw_label(label: str, language_code: str, font_size: float, color, background_color='none') -> None:
     pos = (PITCH / 2, PITCH - mm_to_px(8))
     font_family = font_from_language(language_code)
 
     # Outline
-    yield svg.Text(label, font_size, *pos, center=True, font_family=font_family,
-                   style=f"stroke: {background_color}; stroke-linejoin: round: paint-order: stroke; stroke-width: 4px")
+    yield svg.Text(label, font_size, *pos, center=True, font_family=font_family, font_weight="bold",
+                   style=f"stroke: {background_color}; stroke-linejoin: round; paint-order: stroke; stroke-width: 4px")
 
     # Actual text.
-    yield svg.Text(label, font_size, *pos, fill=color, center=True, font_family=font_family)
+    yield svg.Text(label, font_size, *pos, fill=color, center=True, font_family=font_family, font_weight="bold")
 
 
 def draw_images(t, prefix: str, language_code: str, with_border: bool, config: hash) -> int:
@@ -150,21 +150,21 @@ def single_qr_code(config, language_code, n, prefix, t, with_border):
 
 
 def draw_discs(t: hash, prefix: str, language_code: str, config: hash) -> None:
-    with create_page(f"{language_code}_{prefix}_images_b", format="pdf", language_code=language_code) as page:
+    with create_page(f"{language_code}_{prefix}_images_b", "pdf", language_code=language_code) as page:
         page.extend(draw_images(t, prefix, language_code, config=config, with_border=True))
 
-    with create_page(f"{language_code}_{prefix}_images", format="pdf", language_code=language_code) as page:
+    with create_page(f"{language_code}_{prefix}_images", "pdf", language_code=language_code) as page:
         page.extend(draw_images(t, prefix, language_code, config=config, with_border=False))
 
-    with create_page(f"{language_code}_{prefix}_qr_codes_b", format="pdf", language_code=language_code) as page:
+    with create_page(f"{language_code}_{prefix}_qr_codes_b", "pdf", language_code=language_code) as page:
         page.extend(draw_qr_codes(t, prefix, language_code, with_border=True, config=config))
 
-    with create_page(f"{language_code}_{prefix}_qr_codes", format="pdf", language_code=language_code) as page:
+    with create_page(f"{language_code}_{prefix}_qr_codes", "pdf", language_code=language_code) as page:
         page.extend(draw_qr_codes(t, prefix, language_code, with_border=False, config=config))
 
     for i in range(config["num_tasks"]):
         label = qr_label(prefix, i, language_code)
-        with create_page(f"qr_codes/{prefix}_{label}", format="png", width=DIAMETER, height=DIAMETER,
+        with create_page(f"qr_codes/{prefix}_{label}", "png", width=DIAMETER, height=DIAMETER,
                          language_code=language_code) as page:
             page.extend(single_qr_code(config=config, language_code=language_code, n=i + 1, prefix=prefix, t=t,
                                        with_border=True))
