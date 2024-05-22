@@ -4,13 +4,12 @@ from .utils import mm_to_px, A4_WIDTH, A4_HEIGHT, Color, create_page
 
 
 RADIUS = mm_to_px(70)
-HOLE_RADIUS = mm_to_px(2)
-CORNER_RADIUS = mm_to_px(10)
-WIDTH, HEIGHT = mm_to_px(200), mm_to_px(200)
-CENTER_X, CENTER_Y = WIDTH / 2, HEIGHT / 2
+HOLE_RADIUS = mm_to_px(1.5)
+CORNER_RADIUS = mm_to_px(20)
+WIDTH, HEIGHT = mm_to_px(190), mm_to_px(190)
 ICONS = ["joker", "qr", "qr", "evaluate", "qr", "link", "qr", "evaluate", "qr", "qr", "link", "qr"]
-LINE_WIDTH, LINE_LENGTH = 10, 100
-ICON_WIDTH = 50
+LINE_WIDTH, LINE_LENGTH = 3, 160
+ICON_WIDTH = 65
 
 
 def draw_spinner():
@@ -19,14 +18,14 @@ def draw_spinner():
 
 
 def spinner():
-    yield svg.Rectangle(0, 0, WIDTH, HEIGHT, rx=CORNER_RADIUS, ry=CORNER_RADIUS, fill="none",
-                        stroke=Color.CUT)
-    yield svg.Circle(CENTER_X, CENTER_Y, r=HOLE_RADIUS, fill="none", stroke=Color.CUT)
+    content = svg.Group(transform=f"translate({35 + WIDTH / 2}, {35 + HEIGHT / 2})")
 
-    content = svg.Group(transform=f"translate({CENTER_X}, {CENTER_Y})")
+    content.append(svg.Rectangle(-WIDTH / 2, -HEIGHT / 2, WIDTH, HEIGHT, rx=CORNER_RADIUS, ry=CORNER_RADIUS,
+                                 fill="none", stroke=Color.CUT))
+    content.append(svg.Circle(0, 0, r=HOLE_RADIUS, fill="none", stroke=Color.CUT))
 
     for i, icon in enumerate(ICONS):
-        angle = -90 + 360 * i / len(ICONS)
+        angle = -90 - 360 * i / len(ICONS)
         content.append(svg.Image(-ICON_WIDTH / 2, -ICON_WIDTH / 2, ICON_WIDTH, ICON_WIDTH,
                                  f"./images/icons/{icon}.png", embed=True,
                                  transform=f"rotate({angle}) translate({RADIUS}, 0), rotate(90)"))

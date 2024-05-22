@@ -2,7 +2,7 @@ import subprocess
 from contextlib import contextmanager
 import re
 from tempfile import NamedTemporaryFile
-import os
+import platform
 
 import cairosvg
 import drawsvg as svg
@@ -40,12 +40,6 @@ def stickers(x: int, y: int, limit: int = None) -> (int, int, int):
             yield i, j, n
 
 
-def svg_to_png(in_file: str) -> None:
-    out_file = in_file.replace(".svg", "") + ".png"
-
-    subprocess.check_call(["inkscape", f"--export-png=output/{out_file}", f"designs/{in_file}"])
-
-
 @contextmanager
 def create_page(name, format_: str, language_code: str = None, width: int = A4_WIDTH, height: int = A4_HEIGHT):
     font_family = font_from_language(language_code) if language_code else None
@@ -63,8 +57,8 @@ def create_page(name, format_: str, language_code: str = None, width: int = A4_W
                 page.save_svg(f.name)
                 subprocess.check_call([
                     inkscape_path(),
-                    f"--file={f.name}",
-                    f"--export-pdf=./output/{name}.pdf",
+                    f"--export-filename=./output/{name}.pdf",
+                    f.name,
                 ])
         elif fmt == "png":
             # Assume this doesn't have exotic fonts.
@@ -81,7 +75,12 @@ def icon(name):
 
 
 def inkscape_path():
-    return "/usr/bin/inkscape"
+    if platform.system() == "Windows":
+        return "C:\\Program Files\\Inkscape\\bin\\inkscape.exe"
+    elif platform.system() == "Linux":
+        return "/usr/bin/inkscape"
+    else:
+        raise
 
 
 def font_from_language(language_code):
