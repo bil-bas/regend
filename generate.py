@@ -56,11 +56,17 @@ def parse(parser):
     file_str = f"output/releases/regen-d_{prefix}_{language_code}_{date_str}.zip"
 
     with zipfile.ZipFile(file_str, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zipped:
-        zipped.write("output/actions_icon_b.pdf", "action_disks_front.png")
-        zipped.write(f"output/{language_code}_actions_text_b.pdf", "action_disks_back.pdf")
+        zipped.write("output/actions_icon_b.pdf", "cut-outs/action_disks_front.pdf")
+        zipped.write(f"output/{language_code}_actions_text_b.pdf", "cut-outs/action_disks_back.pdf")
 
-        zipped.write(f"output/{language_code}_{prefix}_images_b.pdf", "task_disks_front.pdf")
-        zipped.write(f"output/{language_code}_{prefix}_qr_codes_b.pdf", "task_disks_back.pdf")
+        zipped.write(f"output/{language_code}_{prefix}_images_b.pdf", "cut-outs/task_disks_front.pdf")
+        zipped.write(f"output/{language_code}_{prefix}_qr_codes_b.pdf", "cut-outs/task_disks_back.pdf")
+
+        zipped.write("output/actions_icon.pdf", "sticker-sheets/action_disks_front.pdf")
+        zipped.write(f"output/{language_code}_actions_text.pdf", "sticker-sheets/action_disks_back.pdf")
+
+        zipped.write(f"output/{language_code}_{prefix}_images.pdf", "sticker-sheets/task_disks_front.pdf")
+        zipped.write(f"output/{language_code}_{prefix}_qr_codes.pdf", "sticker-sheets/task_disks_back.pdf")
 
         zipped.write("output/spinner.svg", "spinner.svg")
         zipped.write("output/spinner.pdf", "spinner.pdf")
