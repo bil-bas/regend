@@ -26,10 +26,12 @@ def draw_bank_icon() -> svg.Image:
     return svg.Image((PITCH - ICON_SIZE_BANK) / 2, 42, ICON_SIZE_BANK, ICON_SIZE_BANK, icon("joker_bank"), embed=True)
 
 
-def draw_qr_code(prefix: str, language_code: str, n: int) -> svg.Image:
+def draw_qr_code(prefix: str, language_code: str, n: int, config: dict) -> svg.Image:
     # Draw QR tag.
     qr_code = segno.make(f"https://ishara.uk/{prefix}{n:02}{language_code if language_code != 'en' else ''}")
-    qr_code = qr_code.to_pil(scale=5)
+
+    qr_code = qr_code.to_pil(scale=5, dark="#c80000" if n in config["hints"] else "black")
+
     data = io.BytesIO()
     qr_code.save(data, format="png")
 
@@ -133,7 +135,7 @@ def draw_qr_codes(t, prefix: str, language_code: str, with_border: bool, config:
 
 def single_qr_code(config, language_code, n, prefix, t, with_border):
     if n <= config["num_tasks"]:
-        yield draw_qr_code(prefix, language_code, n)
+        yield draw_qr_code(prefix, language_code, n, config)
         label = qr_label(prefix, n, language_code)
     else:
         label = t["joker"]
