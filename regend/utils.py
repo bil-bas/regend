@@ -1,10 +1,10 @@
 import subprocess
 from contextlib import contextmanager
 import re
-from tempfile import NamedTemporaryFile
+from tempfile import TemporaryDirectory
 import platform
+import os
 
-import cairosvg
 import drawsvg as svg
 
 MM_TO_PX = 3.7795275591
@@ -53,16 +53,19 @@ def create_page(name, format_: str, language_code: str = None, width: int = A4_W
     for fmt in re.split(r"\s*,\s*", format_.lower()):
         if fmt == "pdf":
             # Assume this MIGHT have exotic fonts.
-            with NamedTemporaryFile(suffix=".svg") as f:
-                page.save_svg(f.name)
-                subprocess.check_call([
+            with TemporaryDirectory() as folder:
+                svg_file = os.path.join(folder, "tmp.svg")
+                page.save_svg(svg_file)
+                args = [
                     inkscape_path(),
+                    svg_file,
                     f"--export-filename=./output/{name}.pdf",
-                    f.name,
-                ])
+                ]
+                subprocess.check_call(args)
+
         elif fmt == "png":
             # Assume this doesn't have exotic fonts.
-            cairosvg.svg2png(page.as_svg(), write_to=f"./output/{name}.png")
+            page.save_png(f"./output/{name}.png")
         elif fmt == "svg":
             # This will be fine regardless of whether it includes exotic fonts.
             page.save_svg(f"./output/{name}.svg")

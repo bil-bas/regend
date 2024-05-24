@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.9
+#!/usr/bin/env python3.12
 
 import argparse
 import zipfile
@@ -68,8 +68,10 @@ def parse(parser):
         zipped.write(f"output/{language_code}_{prefix}_images.pdf", "sticker-sheets/task_disks_front.pdf")
         zipped.write(f"output/{language_code}_{prefix}_qr_codes.pdf", "sticker-sheets/task_disks_back.pdf")
 
-        zipped.write("output/spinner.svg", "spinner.svg")
-        zipped.write("output/spinner.pdf", "spinner.pdf")
+        zipped.write("output/spinner_base.svg", "spinner/spinner_base.svg")
+        zipped.write("output/spinner_base.pdf", "spinner/spinner_base.pdf")
+
+        zipped.write("designs/spinner_pointer.svg", "spinner/spinner_pointer.svg")
 
         zipped.write("output/board_actions.pdf", "extras/actions_board.pdf")
         zipped.write(f"output/{prefix}_board_tasks.pdf", "extras/tasks_board.pdf")

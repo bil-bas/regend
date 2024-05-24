@@ -13,28 +13,26 @@ ICON_WIDTH = 65
 
 
 def draw_spinner():
-    with create_page("spinner", "svg,pdf") as page:
-        page.extend(spinner())
+    with create_page("spinner_base", "svg,pdf", width=A4_WIDTH, height=A4_WIDTH) as page:
+        content = svg.Group(transform=f"translate({35 + WIDTH / 2}, {35 + HEIGHT / 2})")
+        content.extend(spinner())
+        page.append(content)
 
 
 def spinner():
-    content = svg.Group(transform=f"translate({35 + WIDTH / 2}, {35 + HEIGHT / 2})")
-
-    content.append(svg.Rectangle(-WIDTH / 2, -HEIGHT / 2, WIDTH, HEIGHT, rx=CORNER_RADIUS, ry=CORNER_RADIUS,
-                                 fill="none", stroke=Color.CUT))
-    content.append(svg.Circle(0, 0, r=HOLE_RADIUS, fill="none", stroke=Color.CUT))
+    yield svg.Rectangle(-WIDTH / 2, -HEIGHT / 2, WIDTH, HEIGHT, rx=CORNER_RADIUS, ry=CORNER_RADIUS,
+                        fill="none", stroke=Color.CUT)
+    yield svg.Circle(0, 0, r=HOLE_RADIUS, fill="none", stroke=Color.CUT)
 
     for i, icon in enumerate(ICONS):
         angle = -90 - 360 * i / len(ICONS)
-        content.append(svg.Image(-ICON_WIDTH / 2, -ICON_WIDTH / 2, ICON_WIDTH, ICON_WIDTH,
-                                 f"./images/icons/{icon}.png", embed=True,
-                                 transform=f"rotate({angle}) translate({RADIUS}, 0), rotate(90)"))
+        yield svg.Image(-ICON_WIDTH / 2, -ICON_WIDTH / 2, ICON_WIDTH, ICON_WIDTH,
+                        f"./images/icons/{icon}.png", embed=True,
+                        transform=f"rotate({angle}) translate({RADIUS}, 0), rotate(90)")
 
         angle = 360 * (i + 0.5) / len(ICONS)
-        content.append(svg.Rectangle(0, -LINE_WIDTH / 2, LINE_LENGTH, LINE_WIDTH, fill=Color.ENGRAVE,
-                                     transform=f"rotate({angle}) translate({RADIUS - LINE_LENGTH / 2}, 0)"))
-
-    yield content
+        yield svg.Rectangle(0, -LINE_WIDTH / 2, LINE_LENGTH, LINE_WIDTH, fill=Color.ENGRAVE,
+                            transform=f"rotate({angle}) translate({RADIUS - LINE_LENGTH / 2}, 0)")
 
 
 if __name__ == "__main__":
